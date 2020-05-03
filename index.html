@@ -171,6 +171,106 @@
             
 
   
+    <article id="post-事件驱动库-libeloop" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2020/05/03/%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E5%BA%93-libeloop/" target="_blank">事件驱动库-libeloop</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/2020/05/03/%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E5%BA%93-libeloop/" class="archive-article-date">
+        <time datetime="2020-05-03T10:57:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-03</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h1 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h1><p>简单且高效的事件驱动库实现，非常适合在嵌入式环境下使用，需要极少的资源占用</p>
+<ul>
+<li>支持定时器事件</li>
+<li>支持文件描述符事件</li>
+<li>可以在多线程中使用，每个线程都有一个事件循环</li>
+<li>目前支持在linux下使用，使用epoll作为io复用器</li>
+</ul>
+<h1 id="2-源码地址"><a href="#2-源码地址" class="headerlink" title="2.源码地址"></a>2.源码地址</h1><p><a href="https://github.com/huangyajie/libeloop" target="_blank" rel="noopener">下载地址</a></p>
+<h1 id="3-使用示例"><a href="#3-使用示例" class="headerlink" title="3.使用示例"></a>3.使用示例</h1><p>一个简单的 echo 服务器</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//simple echo server</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"eloop.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">read_cb</span> <span class="params">(struct eloop_base* base,struct eloop_fd *efd, <span class="keyword">unsigned</span> <span class="keyword">int</span> events)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"have data\n"</span>);</span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> n = <span class="built_in">read</span>(efd-&gt;fd,buf,<span class="keyword">sizeof</span>(buf));</span><br><span class="line">    <span class="keyword">if</span>(n &lt;= <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"close connection\n"</span>);</span><br><span class="line">        eloop_fd_delete(base,efd);</span><br><span class="line">        <span class="built_in">close</span>(efd-&gt;fd);</span><br><span class="line">        <span class="built_in">free</span>(efd);</span><br><span class="line">        efd = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(efd-&gt;fd,buf,n);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">accept_cb</span> <span class="params">(struct eloop_base* base,struct eloop_fd *efd, <span class="keyword">unsigned</span> <span class="keyword">int</span> events)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"new connection\n"</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">sin</span>;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> sl = <span class="keyword">sizeof</span>(struct sockaddr_in);</span><br><span class="line">	<span class="keyword">int</span> cfd = accept(efd-&gt;fd, (struct sockaddr *) &amp;<span class="built_in">sin</span>, &amp;sl);</span><br><span class="line">	<span class="keyword">if</span> (cfd &lt; <span class="number">0</span>) </span><br><span class="line">    &#123;</span><br><span class="line">		<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Accept failed\n"</span>);</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">eloop_fd</span> *<span class="title">pfd</span> = (<span class="title">struct</span> <span class="title">eloop_fd</span> *)<span class="title">calloc</span>(1,<span class="title">sizeof</span>(*<span class="title">pfd</span>));</span></span><br><span class="line">    pfd-&gt;fd = cfd;</span><br><span class="line">    pfd-&gt;cb = read_cb;</span><br><span class="line">    eloop_fd_add(base,pfd,ELOOP_READ);</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">tcp_server_init</span><span class="params">(<span class="keyword">int</span> port)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sock;</span><br><span class="line"> </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">servaddr</span>;</span></span><br><span class="line"> </span><br><span class="line">    sock = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (sock &lt; <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"> </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> one = <span class="number">1</span>;</span><br><span class="line">    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &amp;one, <span class="keyword">sizeof</span>(one));</span><br><span class="line"> </span><br><span class="line">    bzero(&amp;servaddr, <span class="keyword">sizeof</span>(servaddr));</span><br><span class="line">    servaddr.sin_family      = AF_INET;</span><br><span class="line">    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);</span><br><span class="line">    servaddr.sin_port        = htons(port);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span>(bind(sock, (struct sockaddr *)&amp;servaddr, <span class="keyword">sizeof</span>(servaddr)) != <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"绑定端口失败\n"</span>);</span><br><span class="line">        <span class="built_in">close</span>(sock);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-3</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">listen</span>(sock, SOMAXCONN) != <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>,<span class="string">"listen() 失败\n"</span>);</span><br><span class="line">        <span class="built_in">close</span>(sock);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-4</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">return</span> sock;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/* code */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">eloop_base</span>* <span class="title">base</span> = <span class="title">eloop_init</span>();</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">int</span> sfd = tcp_server_init(<span class="number">5678</span>);</span><br><span class="line">    <span class="keyword">if</span>(sfd &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">eloop_fd</span> <span class="title">efd</span>;</span></span><br><span class="line">    <span class="built_in">memset</span>(&amp;efd,<span class="number">0</span>,<span class="keyword">sizeof</span>(efd));</span><br><span class="line"> </span><br><span class="line">    efd.fd = sfd;</span><br><span class="line">    efd.cb = accept_cb;</span><br><span class="line"> </span><br><span class="line">    eloop_fd_add(base,&amp;efd,ELOOP_READ);</span><br><span class="line"> </span><br><span class="line">    eloop_run(base);</span><br><span class="line">    eloop_done(base);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">事件驱动编程</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/2020/05/03/%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E5%BA%93-libeloop/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-开源库移植" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -188,7 +288,7 @@
   
   
 <a href="/2020/05/03/%E5%BC%80%E6%BA%90%E5%BA%93%E7%A7%BB%E6%A4%8D/" class="archive-article-date">
-        <time datetime="2020-05-03T06:09:38.519Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-03</time>
+        <time datetime="2020-05-03T10:00:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-03</time>
 </a>
 
   
@@ -213,7 +313,7 @@
 <h1 id="3-移植示例"><a href="#3-移植示例" class="headerlink" title="3.    移植示例"></a>3.    移植示例</h1><h2 id="3-1-json-c-0-11-（configure方式）"><a href="#3-1-json-c-0-11-（configure方式）" class="headerlink" title="3.1  json-c-0.11 （configure方式）"></a>3.1  json-c-0.11 （configure方式）</h2><p>(1) 进入源码根目录</p>
 <p>(2) 修改config.h.in </p>
 <p>增加注释</p>
-<p><img src="/Users/Mac/Documents/image-20200503161734916.png" alt="image-20200503161734916"></p>
+<p><img src="/2020/05/03/%E5%BC%80%E6%BA%90%E5%BA%93%E7%A7%BB%E6%A4%8D/Mac/Downloads/hyj/blog/source/_posts/%E5%BC%80%E6%BA%90%E5%BA%93%E7%A7%BB%E6%A4%8D/image-20200503161734916.png" alt></p>
 <p>(3) 执行configure命令</p>
 <p>./configure –host=arm-linux-gnueabihf –prefix=/home/huang/arm/json-c</p>
 <p>–host 指定交叉编译器的前缀</p>
@@ -238,7 +338,7 @@
 <p>#json-c 库文件路径</p>
 <p>link_directories(“/home/huang/arm/json-c/lib”)</p>
 <p>*<em>去掉lua文件夹的编译，我们不需要 *</em></p>
-<p><img src="/Users/Mac/Documents/image-20200503161833793.png" alt="image-20200503161833793"></p>
+<p><img src="/2020/05/03/%E5%BC%80%E6%BA%90%E5%BA%93%E7%A7%BB%E6%A4%8D/Mac/Downloads/hyj/blog/source/_posts/%E5%BC%80%E6%BA%90%E5%BA%93%E7%A7%BB%E6%A4%8D/image-20200503161833793.png" alt></p>
 <p>(3) 执行cmake命令</p>
 <p>cmake -DCMAKE_INSTALL_PREFIX=/home/huang/arm/libubox .</p>
 <p>-DCMAKE_INSTALL_PREFIX：指定安装目录</p>
@@ -257,6 +357,17 @@
   <div class="article-info article-info-index">
     
     
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">开源库移植</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
     
 
     
@@ -401,6 +512,14 @@
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">事件驱动编程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">开源库移植</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
