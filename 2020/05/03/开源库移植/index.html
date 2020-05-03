@@ -17,10 +17,13 @@
 <meta property="og:site_name" content="知秋一叶">
 <meta property="og:description" content="1.    概念​        开源库移植指在宿主机(如ubuntu)，通过交叉编译工具对开源库的源码进行交叉编译，生成在目标设备上可以使用的库与可执行文件。 2.    编译方式一般开源库有2种编译方式，如下： (1) configure方式 .&#x2F;configure  #生成Makefile make    #编译 make install #安装 (2) cmake方式 cmake .">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/Users/Mac/Documents/image-20200503161734916.png">
+<meta property="og:image" content="http://yoursite.com/Users/Mac/Documents/image-20200503161833793.png">
 <meta property="article:published_time" content="2020-05-03T06:09:38.519Z">
-<meta property="article:modified_time" content="2020-05-03T07:39:38.567Z">
+<meta property="article:modified_time" content="2020-05-03T08:20:17.687Z">
 <meta property="article:author" content="知秋一叶">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/Users/Mac/Documents/image-20200503161734916.png">
   
     <link rel="alternative" href="/atom.xml" title="知秋一叶" type="application/atom+xml">
   
@@ -201,7 +204,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">437字</span>
+      <span class="post-count">451字</span>
     </span>
   </span>
 
@@ -234,6 +237,7 @@
 <h1 id="3-移植示例"><a href="#3-移植示例" class="headerlink" title="3.    移植示例"></a>3.    移植示例</h1><h2 id="3-1-json-c-0-11-（configure方式）"><a href="#3-1-json-c-0-11-（configure方式）" class="headerlink" title="3.1  json-c-0.11 （configure方式）"></a>3.1  json-c-0.11 （configure方式）</h2><p>(1) 进入源码根目录</p>
 <p>(2) 修改config.h.in </p>
 <p>增加注释</p>
+<p><img src="/Users/Mac/Documents/image-20200503161734916.png" alt="image-20200503161734916"></p>
 <p>(3) 执行configure命令</p>
 <p>./configure –host=arm-linux-gnueabihf –prefix=/home/huang/arm/json-c</p>
 <p>–host 指定交叉编译器的前缀</p>
@@ -257,6 +261,8 @@
 <p>include_directories(“/home/huang/arm/json-c/include/json-c”)</p>
 <p>#json-c 库文件路径</p>
 <p>link_directories(“/home/huang/arm/json-c/lib”)</p>
+<p>*<em>去掉lua文件夹的编译，我们不需要 *</em></p>
+<p><img src="/Users/Mac/Documents/image-20200503161833793.png" alt="image-20200503161833793"></p>
 <p>(3) 执行cmake命令</p>
 <p>cmake -DCMAKE_INSTALL_PREFIX=/home/huang/arm/libubox .</p>
 <p>-DCMAKE_INSTALL_PREFIX：指定安装目录</p>
